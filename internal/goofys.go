@@ -1022,7 +1022,14 @@ func (fs *Goofys) RmDir(
 	fs.mu.Lock()
 	parent := fs.getInodeOrDie(op.Parent)
 	fs.mu.Unlock()
-
+        // Remove s3 dir
+        fullName := parent.getChildName(op.Name) + "/"
+        fs.s3.DeleteObject(&s3.DeleteObjectInput{Bucket: &fs.bucket, Key: fs.key(fullName + "/")})
+        inode := parent.findChildUnlocked(op.Name, true)
+        if inode != nil {
+                parent.removeChildUnlocked(inode)
+                inode.Parent = nil
+        }
 	err = parent.RmDir(op.Name)
 	parent.logFuse("<-- RmDir", op.Name, err)
 	return
