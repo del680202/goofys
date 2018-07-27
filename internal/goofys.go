@@ -516,7 +516,7 @@ func (fs *Goofys) RemoveXattr(ctx context.Context,
 	inode := fs.getInodeOrDie(op.Inode)
 	fs.mu.Unlock()
 
-	err = inode.RemoveXattr(op.Name)
+	inode.RemoveXattr(op.Name)
 
 	return
 }
@@ -527,7 +527,7 @@ func (fs *Goofys) SetXattr(ctx context.Context,
 	inode := fs.getInodeOrDie(op.Inode)
 	fs.mu.Unlock()
 
-	err = inode.SetXattr(op.Name, op.Value, op.Flags)
+	inode.SetXattr(op.Name, op.Value, op.Flags)
 	return
 }
 
